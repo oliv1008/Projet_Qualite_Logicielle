@@ -1,8 +1,8 @@
 package controller;
 
 import java.awt.event.WindowEvent;
-import java.util.Arrays;
 
+import misc.BCrypt;
 import view.login.LoginWindow;
 
 public class LoginController {
@@ -19,6 +19,7 @@ public class LoginController {
 		if(isPasswordCorrect(mail, input)) {
 			view.dispatchEvent(new WindowEvent(view, WindowEvent.WINDOW_CLOSING));
 			MainController.openMainView();
+			MainController.setTitle("Logged as <" + mail + ">");
 		}
 		else {
 			throw new Exception(BAD_LOGIN);
@@ -26,19 +27,8 @@ public class LoginController {
 	}
 	
 	public static boolean isPasswordCorrect(String mail, char[] input) {
-	    boolean isCorrect = true;
-	    
-	    char[] correctPassword = {};	// récuperer le mot de passe avec le DAO et le déchiffrer
-
-	    if (input.length != correctPassword.length) {
-	        isCorrect = false;
-	    } else {
-	        isCorrect = Arrays.equals(input, correctPassword);
-	    }
-
-	    // Zero out the password.		<--- vérifier si cette méthode efface pas le mdp dans la BDD
-	    Arrays.fill(correctPassword,'0');
-
-	    return isCorrect;
+		String inputStr = new String(input);
+		String hash = UserDAO.getHashByMail(mail);
+		return BCrypt.checkpw(inputStr, hash);
 	}
 }
