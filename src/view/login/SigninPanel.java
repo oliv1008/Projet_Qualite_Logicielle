@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -15,7 +16,7 @@ import javax.swing.JTextField;
 
 import controller.LoginController;
 
-public class SigninPanel extends JPanel implements ActionListener {
+public class SigninPanel extends JPanel {
 
 	private JTextField tMail;
 	private JPasswordField tPassword;
@@ -43,28 +44,26 @@ public class SigninPanel extends JPanel implements ActionListener {
 
 		add(center, BorderLayout.CENTER);
 
-		JButton signUpButton = new JButton("Se connecter");
-		signUpButton.setPreferredSize(new Dimension(480, 30));
-		signUpButton.addActionListener(this);
+		JButton signInButton = new JButton("Se connecter");
+		signInButton.setPreferredSize(new Dimension(480, 30));
+		signInButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					LoginController.login(tMail.getText(), tPassword.getPassword());
+				} catch(Exception error) {
+					if(error.getMessage() == LoginController.BAD_LOGIN) {
+						JOptionPane.showMessageDialog(new JFrame(), "Mot de passe incorrect, réessayez", "Erreur", JOptionPane.ERROR_MESSAGE);
+						tPassword.setText("");
+					}
+					else {
+						error.printStackTrace();
+					}
+				}
+			}	
+		});
+		add(signInButton, BorderLayout.SOUTH);
 
-		add(signUpButton, BorderLayout.SOUTH);
-
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		switch(e.getActionCommand()) {
-		case "Se connecter" :	
-			try {
-				LoginController.login(tMail.getText(), tPassword.getPassword());
-			} catch(Exception error) {
-//				error.printStackTrace();
-				JOptionPane.showMessageDialog(this, "Mot de passe incorrect, réessayez", "Erreur", JOptionPane.ERROR_MESSAGE);
-				tPassword.setText("");
-			}
-
-			break;
-		}
 	}
 
 }

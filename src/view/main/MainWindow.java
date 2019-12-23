@@ -7,10 +7,15 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import controller.MainController;
+import view.main.stock.StockPanel;
 
 /**
  * This class represent the "main view" of the Main App.
@@ -44,6 +49,13 @@ public class MainWindow extends JFrame implements ActionListener {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(true);
+		
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				MainController.onExit();
+			}
+		});
 
 		setUpButtons();
 
@@ -91,7 +103,7 @@ public class MainWindow extends JFrame implements ActionListener {
 
 	/*===== GETTERS =====*/
 
-	public JPanel getStockPanel() {
+	public StockPanel getStockPanel() {
 		return stockPanel;
 	}
 
@@ -124,8 +136,8 @@ public class MainWindow extends JFrame implements ActionListener {
 			
 		case "Gestion du compte" :
 			stockButton.setBackground(null); 
-			usersButton.setBackground(new Color(174, 174, 174));
-			accountButton.setBackground(null);
+			usersButton.setBackground(null);
+			accountButton.setBackground(new Color(174, 174, 174));
 			cardLayout.show(contentPane, listContent[2]);
 			break;
 		}

@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 
 import javax.swing.table.AbstractTableModel;
 
-import controller.MainController;
+import controller.ShopDAO;
 
 /**
  * This class is used ad the model for the JTable of checks.
@@ -20,7 +20,7 @@ public class ItemList extends AbstractTableModel implements Serializable {
 	private ArrayList<StockLine> stocks;
 	private final String[] columns = {"Magasin", "Produit", "Quantité"};
 
-	private ArrayList<Shop> shops = new ArrayList<Shop>();
+	private ArrayList<Shop> shops;
 
 	/*===== BUILDER =====*/	
 
@@ -29,18 +29,21 @@ public class ItemList extends AbstractTableModel implements Serializable {
 	 * @param checks the ArrayList of checks contained in the company
 	 */
 	public ItemList() {
+		rebuildModel();
+	}
+	
+	public void rebuildModel() {
 		stocks = new ArrayList<StockLine>();
-				
-		this.shops = MainController.getShopList();
-		
+
+		shops = ShopDAO.getAllShops();
+
 		for(Shop s : shops) {
 			for(Entry<Item, Integer> entry : s.getStock().entrySet()) {
-				System.out.println(s + " " + entry.getKey() + " " + entry.getValue());
-				stocks.add(new StockLine(s, 
-						entry.getKey(), 
-						entry.getValue()));
+				stocks.add(new StockLine(s, entry.getKey()));
 			}
 		}
+		
+	 	fireTableDataChanged();
 	}
 
 	/*===== GETTERS AND SETTERS =====*/	
@@ -49,19 +52,19 @@ public class ItemList extends AbstractTableModel implements Serializable {
 	 * Add a check to the model and update the tableModel
 	 * @param check the department to add
 	 */
-	//	public void addCheck(Check check) {
-	//		checks.add(check);
-	//		fireTableRowsInserted(checks.size()-1, checks.size()-1);
-	//	}
+	public void addStockLine(StockLine line) {
+		stocks.add(line);
+		fireTableRowsInserted(stocks.size()-1, stocks.size()-1);
+	}
 
 	/**
 	 * Remove a check from the model and update the tableModel
 	 * @param rowIndex the row index of the check to remove
 	 */
-	//	public void removeCheck(int rowIndex) {
-	//		checks.remove(rowIndex);
-	//		fireTableRowsDeleted(rowIndex, rowIndex);
-	//	}
+	public void removeStockLine(int rowIndex) {
+		stocks.remove(rowIndex);
+		fireTableRowsDeleted(rowIndex, rowIndex);
+	}
 
 	/**
 	 * Can be used to get a check depending of his place in the table
@@ -116,8 +119,10 @@ public class ItemList extends AbstractTableModel implements Serializable {
 		if(value != null) {
 			StockLine stock = stocks.get(rowIndex);
 			switch(columnIndex) {
+			case 2 : stock.setQuantity((Integer)value); break;
 			default: break;
 			}
+			fireTableRowsUpdated(rowIndex, rowIndex);
 		}
 	}
 
