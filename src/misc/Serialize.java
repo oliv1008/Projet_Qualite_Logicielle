@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -36,12 +37,12 @@ public abstract class Serialize {
 	 * @param path the path where to load the object
 	 * @return the object loaded, else null if the object isn't found
 	 */
-	public static Object load(String path) {
+	public static Object load(String path) throws FileNotFoundException {
 		ObjectInputStream input;
 		File f = new File(path);
 		// If the file doesn't exist or is a directory, return null
 		if(!f.exists() || f.isDirectory()) {
-			return null;
+			throw new FileNotFoundException();
 		}
 		// Else :
 		try {
@@ -50,9 +51,7 @@ public abstract class Serialize {
 			Object object = input.readObject();
 			input.close();
 			return object;
-		} catch(ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch(IOException e) {
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 		return null;

@@ -1,17 +1,21 @@
 package model;
 
+/**
+ * Represent a line of data in the table model (Shop | Item | Quantity)
+ */
 public class StockLine {
 
+	/*===== ATTRIBUTES =====*/
 	private Shop shop;
 	private Item item;
-	private Integer quantity;
 	
-	public StockLine(Shop shop, Item item, Integer quantity) {
+	/*===== BUILDER =====*/
+	public StockLine(Shop shop, Item item) {
 		this.shop = shop;
 		this.item = item;
-		this.quantity = quantity;
 	}
 
+	/*===== GETTERS AND SETTERS =====*/
 	public Shop getShop() {
 		return shop;
 	}
@@ -21,8 +25,11 @@ public class StockLine {
 	}
 
 	public Integer getQuantity() {
-		return quantity;
+		return shop.getQuantity(item);
 	}
 	
-	
+	public void setQuantity(Integer quantity) {
+		shop.setQuantity(item, quantity);
+	}
+		
 }

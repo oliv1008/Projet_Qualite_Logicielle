@@ -59,17 +59,24 @@ public class LoginWindow extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()) {
-		case "Se connecter"	:	
-			center.removeAll(); center.add(new SigninPanel()); center.validate();
-			signInButton.setBackground(new Color(174, 174, 174)); signUpButton.setBackground(null); 
-			
-			break;
-		case "S'inscrire"	: 	
-			center.removeAll(); center.add(new SignupPanel()); center.validate();
-			signUpButton.setBackground(new Color(174, 174, 174)); signInButton.setBackground(null); 
-			
-			break;
+		case "Se connecter"	:	displaySigninPanel(); break;
+		case "S'inscrire"	: 	displaySignupPanel(); break;
 		}
-
+	}
+	
+	public void displaySigninPanel() {
+		center.removeAll(); 
+		center.add(new SigninPanel()); 
+		center.validate();
+		signInButton.setBackground(new Color(174, 174, 174)); 
+		signUpButton.setBackground(null); 
+	}
+	
+	public void displaySignupPanel() {
+		center.removeAll(); 
+		center.add(new SignupPanel()); 
+		center.validate();
+		signUpButton.setBackground(new Color(174, 174, 174)); 
+		signInButton.setBackground(null); 
 	}
 }

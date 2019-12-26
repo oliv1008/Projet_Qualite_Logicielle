@@ -1,10 +1,7 @@
 package controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
-import misc.BCrypt;
-import model.Item;
 import model.Shop;
 import model.User;
 import view.main.MainWindow;
@@ -14,20 +11,26 @@ public class MainController {
 	/*===== ATTRIBUTES =====*/
 	private static MainWindow view;
 
-	private static ArrayList<User> users;
-	private static ArrayList<Shop> shops;
+	private static ArrayList<User> users;	// Users array
+	private static ArrayList<Shop> shops;	// Shops array (contains the stocks for each shops)
+	
+	private static User currentUser;
 
 	public static void main(String[] args) {
-		LoginController loginController = new LoginController();
+		ItemDAO.loadItemFile();
+		ShopDAO.loadShopFile();	
+		UserDAO.loadUserFile();
 
-		users = new ArrayList<User>();
-		String hashed = BCrypt.hashpw("admin", BCrypt.gensalt());
-		users.add(new User("admin", "admin", new Shop(), "admin", hashed, User.SUPER_ADMIN));
+		LoginController loginController = new LoginController();
+	
+//		openMainView(UserDAO.getUserByMail("admin"));
 	}
 
 	/*===== BUILDER =====*/
-	public static void openMainView() {
+	public static void openMainView(User user) {
+		currentUser = user;
 		view = new MainWindow();
+		view.setTitle("Connecté en tant que <" + user.getMail() + "> (privilege=" + user.getPrivilege() + ")");
 	}
 
 	/*===== GETTERS AND SETTERS =====*/
@@ -38,24 +41,20 @@ public class MainController {
 	public static ArrayList<Shop> getShops() {
 		return shops;
 	}
-
-	public static void setTitle(String title) {
-		view.setTitle(title);
+	
+	public static User getCurrentUser() {
+		return currentUser;
 	}
 
 	/*===== METHODS =====*/
-	/**
-	 * TMP
-	 * @return
-	 */
-	public static ArrayList<Shop> getShopList(){
-		ArrayList<Shop> shops = new ArrayList<Shop>();
-		HashMap<Item, Integer> stock = new HashMap<Item, Integer>();
-		stock.put(new Item("Pomme", "c'est bon", 1.5), 3);	
-		shops.add(new Shop("Lidl", "123 rue chépaou", stock));
-		return shops;
+	public static void onExit() {
+		ItemDAO.saveItemFile();
+		ShopDAO.saveShopFile();
+		UserDAO.saveUserFile();
 	}
 	
-	
+	public static void refreshDisplay() {
+		view.getStockPanel().refresh();
+	}
 
 }
