@@ -56,7 +56,32 @@ public class User implements Serializable {
 		return privilege;
 	}
 	
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public void setShop(Shop shop) {
+		this.shop = shop;
+	}
+
+	public void setMail(String mail) {
+		this.mail = mail;
+	}
+
+	public void setHashedPwd(String password) {
+		this.hashedPwd = BCrypt.hashpw(new String(password), BCrypt.gensalt(5));
+	}
+
+	public void setPrivilege(int privilege) {
+		this.privilege = privilege;
+	}
+
 	/*===== METHODS =====*/
+	@Override
 	public String toString() {
 		return firstName + " " + lastName + " | " + hashCode();
 	}
@@ -73,10 +98,7 @@ public class User implements Serializable {
 	// Trouver une meilleure façon de faire ça (genre un ID ?)
 	@Override
 	public int hashCode() {
-	    return (int) (firstName.length() + lastName.length() + shop.hashCode() + mail.length());
+	    return firstName.length() * lastName.length() + shop.hashCode() * mail.length();
 	}
-	
-	
-	
-	
+		
 }

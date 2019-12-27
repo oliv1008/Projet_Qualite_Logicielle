@@ -45,15 +45,6 @@ public class StockPanel extends JPanel {
 	private ShopComboBox shopComboBox;					/** ComboBox for item transfer **/
 	private JButton transferButton;						/** Button for item transfer **/
 
-	/*===== GETTERS =====*/	
-	public void refresh() {
-		itemList.rebuildModel();
-		shopComboBox.reload();
-		filterPanel.refresh();
-		if(adminPanel != null) adminPanel.refresh();
-	}
-
-
 	/*===== BUILDER =====*/
 	public StockPanel() {
 		setLayout(new BorderLayout());
@@ -206,6 +197,14 @@ public class StockPanel extends JPanel {
 		buttons.add(seeItem);
 
 		add(buttons, BorderLayout.SOUTH);
+	}
+	
+	/*===== METHODS =====*/
+	public void refresh() {
+		itemList.rebuildModel();
+		shopComboBox.reload();
+		filterPanel.refresh();
+		if(adminPanel != null) adminPanel.refresh();
 	}
 
 }

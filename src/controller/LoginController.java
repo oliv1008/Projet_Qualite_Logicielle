@@ -41,28 +41,12 @@ public class LoginController {
 	}
 
 	public static void signup(String firstName, String lastName, Shop shop, String mail, char[] password) throws Exception {
-		if(isNameValid(firstName) && isNameValid(lastName) && isShopValid(shop) && isMailValid(mail) && isPasswordValid(password)) {
+		try {
 			UserDAO.addUser(firstName, lastName, shop, mail, password, User.SELLER);
 			view.displaySigninPanel();
 		}
-		else {
+		catch(Exception e) {
 			throw new Exception(BAD_SIGNUP);
 		}
-	}
-
-	public static boolean isNameValid(String name) {
-		return name.matches("[A-Za-z]+");
-	}
-
-	public static boolean isShopValid(Shop shop) {
-		return shop != null;
-	}
-
-	public static boolean isMailValid(String mail) {
-		return mail.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9]+[.][a-z]+$");
-	}
-
-	public static boolean isPasswordValid(char[] password) {
-		return password.length != 0;
 	}
 }

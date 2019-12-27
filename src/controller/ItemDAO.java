@@ -3,7 +3,7 @@ package controller;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-import misc.ExceptionBlabla;
+import misc.CoherenceException;
 import misc.PermissionException;
 import misc.Serialize;
 import model.Item;
@@ -53,7 +53,7 @@ public class ItemDAO {
 	 * @throw PermissionException
 	 * @throw ExceptionBlabla
 	 */
-	public static void addItem(String name, String description, double price) throws PermissionException, ExceptionBlabla {
+	public static void addItem(String name, String description, double price) throws PermissionException, CoherenceException {
 		// Permissions : (== SUPER_ADMIN)
 		if(MainController.getCurrentUser().getPrivilege() == User.SUPER_ADMIN) {
 			// Coherence
@@ -70,7 +70,7 @@ public class ItemDAO {
 				
 			}
 			else {
-				throw new ExceptionBlabla("Données non valides");
+				throw new CoherenceException("Données non valides");
 			}
 		}
 		else {
@@ -82,9 +82,9 @@ public class ItemDAO {
 	 * Delete an item from the global list, and from the stocks of each shop
 	 * @param item the item to delete
 	 * @throws PermissionException
-	 * @throws ExceptionBlabla
+	 * @throws CoherenceException
 	 */
-	public static void deleteItem(Item item) throws PermissionException, ExceptionBlabla {
+	public static void deleteItem(Item item) throws PermissionException, CoherenceException {
 		// Permissions : (== SUPER_ADMIN)
 		if(MainController.getCurrentUser().getPrivilege() == User.SUPER_ADMIN) {
 			// Coherence
@@ -93,12 +93,11 @@ public class ItemDAO {
 
 				ArrayList<Shop> shops = ShopDAO.getAllShops();
 				for(Shop s : shops) {
-
 					s.getStock().remove(item);
 				}
 			}
 			else {
-				throw new ExceptionBlabla("Données non valides");
+				throw new CoherenceException("Données non valides");
 			}
 		}
 		else {
@@ -113,17 +112,18 @@ public class ItemDAO {
 	 * @param newDescription the new description
 	 * @param newPrice the new price
 	 * @throws PermissionException
-	 * @throws ExceptionBlabla
+	 * @throws CoherenceException
 	 */
-	public static void modifyItem(Item item, String newName, String newDescription, double newPrice) throws PermissionException, ExceptionBlabla {
+	public static void modifyItem(Item item, String newName, String newDescription, double newPrice) throws PermissionException, CoherenceException {
 		// Permissions : (== SUPER_ADMIN)
 		if(MainController.getCurrentUser().getPrivilege() == User.SUPER_ADMIN) {
 			// Coherence
 			if(item != null && isNameValid(newName) && isDescriptionValid(newDescription) && isPriceValid(newPrice)) {
 				
-				items.get(items.indexOf(item)).setName(newName);
-				items.get(items.indexOf(item)).setDescription(newDescription);
-				items.get(items.indexOf(item)).setPrice(newPrice);
+				int index = items.indexOf(item);
+				items.get(index).setName(newName);
+				items.get(index).setDescription(newDescription);
+				items.get(index).setPrice(newPrice);
 
 				ArrayList<Shop> shops = ShopDAO.getAllShops();
 				for(Shop s : shops) {
@@ -134,7 +134,7 @@ public class ItemDAO {
 				
 			}
 			else {
-				throw new ExceptionBlabla("Données non valides");
+				throw new CoherenceException("Données non valides");
 			}	
 		}
 		else {
@@ -149,9 +149,9 @@ public class ItemDAO {
 	 * @param from the shop of departure
 	 * @param to the shop of arrival
 	 * @throws PermissionException
-	 * @throws ExceptionBlabla
+	 * @throws CoherenceException
 	 */
-	public static void transferItem(Item item, Integer quantity, Shop from, Shop to) throws PermissionException, ExceptionBlabla {
+	public static void transferItem(Item item, Integer quantity, Shop from, Shop to) throws PermissionException, CoherenceException {
 		// Permissions : (>= ADMIN) || (== SELLER && same shop)
 		if(MainController.getCurrentUser().getPrivilege() >= User.ADMIN ||
 				(MainController.getCurrentUser().getPrivilege() == User.SELLER
@@ -167,7 +167,7 @@ public class ItemDAO {
 
 			}
 			else {
-				throw new ExceptionBlabla("Données non valides");
+				throw new CoherenceException("Données non valides");
 			}
 
 		}
@@ -182,10 +182,10 @@ public class ItemDAO {
 	 * @param item the item to change
 	 * @param quantity the new stock
 	 * @throws PermissionException
-	 * @throws ExceptionBlabla
+	 * @throws CoherenceException
 	 * TODO : déplacer cette méthode dans ShopDAO ?
 	 */
-	public static void changeStock(Shop shop, Item item, Integer quantity) throws PermissionException, ExceptionBlabla {
+	public static void changeStock(Shop shop, Item item, Integer quantity) throws PermissionException, CoherenceException {
 		// Permissions : (>= ADMIN) || (== SELLER && same shop)
 		if(MainController.getCurrentUser().getPrivilege() >= User.ADMIN ||
 				(MainController.getCurrentUser().getPrivilege() == User.SELLER
@@ -197,7 +197,7 @@ public class ItemDAO {
 				
 			}
 			else {
-				throw new ExceptionBlabla("Données non valides");
+				throw new CoherenceException("Données non valides");
 			}
 		}
 		else {
