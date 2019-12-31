@@ -20,18 +20,15 @@ public class LoginWindow extends JFrame implements ActionListener {
 	
 	public LoginWindow() {
 
-		setTitle("Login");
-		//		setSize(300,170);
-		setMinimumSize(new Dimension(500, 315));
+		setTitle("Authentification");
+		setMinimumSize(new Dimension(500, 335));
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setResizable(true);
 
 		setLayout(new BorderLayout());
 
-
 		JPanel north = new JPanel();
-		//		north.setLayout(new GridLayout(1, 0));
 
 		signInButton = new JButton("Se connecter");
 		signInButton.setPreferredSize(new Dimension(240, 30));

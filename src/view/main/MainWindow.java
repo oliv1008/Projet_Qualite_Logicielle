@@ -13,24 +13,20 @@ import java.awt.event.WindowEvent;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 
 import controller.MainController;
+import model.User;
+import view.main.account.AccountPanel;
 import view.main.stock.StockPanel;
+import view.main.users.UserPanel;
 
-/**
- * This class represent the "main view" of the Main App.
- * It contains the different tabs of the main app : employees, departments, checks and settings panels.
- * @see EmployeesJTable
- * @see DepartmentsJTable
- * @see CheckJTable
- * @see SettingsPanel
- */
-public class MainWindow extends JFrame implements ActionListener {
+public class MainWindow extends JFrame {
 
 	/*===== ATTRIBUTES =====*/
 	StockPanel stockPanel = new StockPanel();
-	JPanel usersPanel = new JPanel();
-	JPanel accountPanel = new JPanel();	
+	UserPanel usersPanel = new UserPanel();
+	AccountPanel accountPanel = new AccountPanel();	
 	
 	JButton stockButton;
 	JButton usersButton;
@@ -47,7 +43,7 @@ public class MainWindow extends JFrame implements ActionListener {
 		setSize(1200,600);
 		setMinimumSize(new Dimension(770, 200));
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setResizable(true);
 		
 		this.addWindowListener(new WindowAdapter() {
@@ -60,10 +56,6 @@ public class MainWindow extends JFrame implements ActionListener {
 		setUpButtons();
 
 		setVisible(true);
-		
-		stockPanel.setBackground(Color.RED);
-		usersPanel.setBackground(Color.BLUE);
-		accountPanel.setBackground(Color.GREEN);
 	}
 	/*=====*********=====*/
 
@@ -72,17 +64,41 @@ public class MainWindow extends JFrame implements ActionListener {
 		JPanel buttonPane = new JPanel();
 
 		stockButton = new JButton("Gestion du stock");
-//		stockButton.setIcon(new ImageIcon());
-		stockButton.addActionListener(this);
+		stockButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				stockButton.setBackground(new Color(174, 174, 174)); 
+				usersButton.setBackground(null);
+				accountButton.setBackground(null);
+				cardLayout.show(contentPane, listContent[0]);
+			}	
+		});
 		stockButton.setBackground(new Color(174, 174, 174)); 
 
 		usersButton = new JButton("Gestion des utilisateurs");
-//		usersButton.setIcon(new ImageIcon());
-		usersButton.addActionListener(this);
+		usersButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				stockButton.setBackground(null); 
+				usersButton.setBackground(new Color(174, 174, 174));
+				accountButton.setBackground(null);
+				cardLayout.show(contentPane, listContent[1]);
+			}	
+		});
+		if(MainController.getCurrentUser().getPrivilege() < User.ADMIN) {
+			usersButton.setEnabled(false);
+		}
 
 		accountButton = new JButton("Gestion du compte");
-//		accountButton.setIcon(new ImageIcon());
-		accountButton.addActionListener(this);
+		accountButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				stockButton.setBackground(null); 
+				usersButton.setBackground(null);
+				accountButton.setBackground(new Color(174, 174, 174));
+				cardLayout.show(contentPane, listContent[2]);
+			}	
+		});
 
 		// Adds all the buttons to the button panel
 		buttonPane.setLayout(new GridLayout(1, 3));
@@ -107,40 +123,12 @@ public class MainWindow extends JFrame implements ActionListener {
 		return stockPanel;
 	}
 
-	public JPanel getUsersPanel() {
+	public UserPanel getUsersPanel() {
 		return usersPanel;
 	}
 
-	public JPanel getAccountPanel() {
+	public AccountPanel getAccountPanel() {
 		return accountPanel;
-	}
-
-	/*===== ACTION LISTENER =====*/
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		switch(e.getActionCommand()) {
-		case "Gestion du stock" :
-			stockButton.setBackground(new Color(174, 174, 174)); 
-			usersButton.setBackground(null);
-			accountButton.setBackground(null);
-			cardLayout.show(contentPane, listContent[0]);
-			break;
-			
-		case "Gestion des utilisateurs" :
-			stockButton.setBackground(null); 
-			usersButton.setBackground(new Color(174, 174, 174));
-			accountButton.setBackground(null);
-			cardLayout.show(contentPane, listContent[1]);
-			break;
-			
-		case "Gestion du compte" :
-			stockButton.setBackground(null); 
-			usersButton.setBackground(null);
-			accountButton.setBackground(new Color(174, 174, 174));
-			cardLayout.show(contentPane, listContent[2]);
-			break;
-		}
 	}
 
 }

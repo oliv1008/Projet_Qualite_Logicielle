@@ -23,12 +23,12 @@ public class SigninPanel extends JPanel {
 
 	public SigninPanel() {
 
-		setLayout(new BorderLayout());
+		setLayout(new BorderLayout(5, 5));
 
 		JPanel center = new JPanel();
 
 		center.setLayout(new GridLayout(6, 2, 0, 5));
-		center.setPreferredSize(new Dimension(480, 200));
+		center.setPreferredSize(new Dimension(480, 220));
 
 		JLabel lMail = new JLabel("Mail");
 		center.add(lMail);
