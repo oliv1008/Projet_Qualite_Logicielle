@@ -88,7 +88,7 @@ public class UserPanel extends JPanel {
 		});
 		contentPanel.add(addUserButton);
 
-		removeUserButton = new JButton("Supprimer l'utilisateur selectionné");
+		removeUserButton = new JButton("Supprimer l'utilisateur sélectionné");
 		removeUserButton.setPreferredSize(new Dimension(280, 30));
 		removeUserButton.addActionListener(new ActionListener() {
 			@Override
