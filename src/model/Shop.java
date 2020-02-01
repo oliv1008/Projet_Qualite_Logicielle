@@ -3,6 +3,9 @@ package model;
 import java.io.Serializable;
 import java.util.HashMap;
 
+/**
+ * Model for the shops
+ */
 public class Shop implements Serializable {
 
 	/*===== ATTRIBUTES =====*/

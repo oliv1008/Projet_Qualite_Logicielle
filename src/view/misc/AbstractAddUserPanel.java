@@ -17,8 +17,13 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+/**
+ * Abstract class used to represent a panel of creation of accounts.
+ * It's used to sign up in the first authentification window, and to create new users in the main app.
+ */
 public abstract class AbstractAddUserPanel extends JPanel {
 
+	/*===== ATTRIBUTES =====*/
 	protected JTextField tLastName;
 	protected JTextField tFirstName;
 	protected ShopComboBox cbShop;
@@ -36,6 +41,7 @@ public abstract class AbstractAddUserPanel extends JPanel {
 	protected boolean mailValid = false;
 	protected boolean passwordValid = false;
 
+	/*===== BUILDER =====*/
 	public AbstractAddUserPanel(){
 		setLayout(new BorderLayout(5, 5));
 
@@ -178,6 +184,7 @@ public abstract class AbstractAddUserPanel extends JPanel {
 		updateSignUpButton();
 	}
 
+	/*===== METHODS =====*/
 	protected abstract void updateSignUpButton();
 
 	protected abstract void addFinalButton();

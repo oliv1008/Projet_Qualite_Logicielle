@@ -16,11 +16,16 @@ import javax.swing.JTextField;
 
 import controller.LoginController;
 
+/**
+ * Panel for the connection to the main app
+ */
 public class SigninPanel extends JPanel {
 
+	/*===== ATTRIBUTES =====*/
 	private JTextField tMail;
 	private JPasswordField tPassword;
 
+	/*===== BUILDER =====*/
 	public SigninPanel() {
 
 		setLayout(new BorderLayout(5, 5));

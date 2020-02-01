@@ -2,6 +2,9 @@ package model;
 
 import java.io.Serializable;
 
+/**
+ * Model for the items sold in the shops
+ */
 public class Item implements Serializable {
 
 	/*===== ATTRIBUTES =====*/
@@ -44,7 +47,7 @@ public class Item implements Serializable {
 	/*===== METHODS =====*/
 	@Override
 	public String toString() {
-		return name;
+		return name + " " + hashCode();
 	}
 	
 	@Override
@@ -53,10 +56,8 @@ public class Item implements Serializable {
 	    if (!(obj instanceof Item)) return false;
 	    if (obj == this) 			return true;
 	    return this.hashCode() == ((Item) obj).hashCode();
-
 	}
-	
-	// Trouver une meilleure façon de faire ça (genre un ID ?)
+
 	@Override
 	public int hashCode() {
 	    return (int) (name.length() * description.length() * price*10);

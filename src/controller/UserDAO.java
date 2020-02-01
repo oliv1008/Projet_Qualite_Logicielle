@@ -19,17 +19,24 @@ public class UserDAO {
 
 	/**
 	 * Load the list of users from the filesystem
+	 * @param reset if true, create a new database
 	 */
 	@SuppressWarnings("unchecked")
-	public static void loadUserFile() {
-		try {
-			users = (ArrayList<User>)Serialize.load(userFilePath);
-		} catch (FileNotFoundException e) {
+	public static void loadUserFile(boolean reset) {
+		if(reset) {
 			users = new ArrayList<User>();
-			// Add the super-admin user (mail="admin", password="admin")
+			// We add the super-admin user (mail="admin", password="admin")
 			users.add(new User("admin", "admin", new Shop("Polytech", ""), "admin", "admin", User.SUPER_ADMIN));
-			populateUserList(users);
-			System.out.println("[UserDAO] Model file not found, creation of a new file");
+		}
+		else {
+			try {
+				users = (ArrayList<User>)Serialize.load(userFilePath);
+			} catch (FileNotFoundException e) {
+				users = new ArrayList<User>();
+				// We add the super-admin user (mail="admin", password="admin")
+				users.add(new User("admin", "admin", new Shop("Polytech", ""), "admin", "admin", User.SUPER_ADMIN));
+				System.out.println("[UserDAO] Model file not found, creation of a new file");
+			}
 		}
 	}
 
@@ -61,14 +68,19 @@ public class UserDAO {
 		// Coherence
 		if(isNameValid(firstName) && isNameValid(lastName) && isShopValid(shop) && isMailValid(mail) && isPasswordValid(password)) {
 			// Permissions (== SUPER_ADMIN) || (== ADMIN && shop == current.shop) || (current == null)
+			
 			User currentUser = MainController.getCurrentUser();
+			// If the current user is null (= someone is trying to sign up), we create the account
 			if(currentUser == null) {
 				users.add(new User(firstName, lastName, shop, mail, new String(password), privilege));
 			}
+			
+			// Else we check if the current user have the correct permissions
 			else if(currentUser.getPrivilege() == User.SUPER_ADMIN ||
-					(currentUser.getPrivilege() == User.ADMIN && currentUser.getShop().equals(shop))) {
+					(currentUser.getPrivilege() == User.ADMIN && currentUser.getShop().equals(shop)) && privilege <= User.ADMIN) {
 				users.add(new User(firstName, lastName, shop, mail, new String(password), privilege));
 			}
+			
 			else {
 				throw new PermissionException("Vous n'avez pas les permissions requises pour exécuter cette action");
 			}
@@ -91,11 +103,12 @@ public class UserDAO {
 			User current = MainController.getCurrentUser();
 			if(!user.equals(UserDAO.getUserByMail("admin")) && !user.equals(current) &&
 					(current.getPrivilege() == User.SUPER_ADMIN || 
-					(current.getPrivilege() == User.ADMIN && current.getShop().equals(user.getShop())))) {
-				
+					(current.getPrivilege() == User.ADMIN && current.getShop().equals(user.getShop()) && user.getPrivilege() < User.ADMIN))) {
+
+				// We show a confirmation pop-up before deleting the user
 				if (JOptionPane.showConfirmDialog(null, "Etes vous sur de supprimer le compte de ["+user.getMail()+"] ?", "Attention", 
 						JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-				users.remove(user);
+					users.remove(user);
 				}
 
 			}
@@ -108,16 +121,22 @@ public class UserDAO {
 		}
 	}
 
-	public static void deleteOwnAccount()  throws PermissionException, CoherenceException {
+	/**
+	 * Similar to the method "deleteUser" but can only be used to delete the account of the user using the app
+	 * @throws PermissionException
+	 * @throws CoherenceException
+	 */
+	public static void deleteOwnAccount()  throws PermissionException {
 		// Permissions : user != "admin"
 		if(!(MainController.getCurrentUser()).equals(UserDAO.getUserByMail("admin"))) {
 
+			// We show a confirmation pop-up before deleting the user
 			if (JOptionPane.showConfirmDialog(null, "Votre compte va être supprimé. Etes vous sur ?", "Attention", 
 					JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 				users.remove(MainController.getCurrentUser());
 				MainController.setCurrentUser(null);
-				MainController.getView().dispose();
-				new LoginController();
+				MainController.getView().dispose();		// We close the main window
+				new LoginController();					// And open the login window
 			} 
 		}
 		else {
@@ -138,26 +157,23 @@ public class UserDAO {
 	 * @throws CoherenceException
 	 */
 	public static void modifyUser(User user, String firstName, String lastName, Shop shop, String mail, char[] password, int privilege) throws PermissionException, CoherenceException {
-		System.out.println(user + " | " + firstName + " | " + lastName + " | " + shop + " | " + mail + " | " + new String(password) + " | " + privilege);
 		// Coherence
-		if(user != null && isNameValid(firstName) && isNameValid(lastName) && isShopValid(shop)) {
-			// Permissions : (==SUPER_ADMIN) || (...)
+		if(user != null && isNameValid(firstName) && isNameValid(lastName) && isShopValid(shop) && isPrivilegeValid(privilege)) {
+			// Permissions : (==SUPER_ADMIN) || (==ADMIN && Current.SHOP == User.SHOP && Current.SHOP == SHOP && User.PRIV < ADMIN && PRIV <= ADMIN)
 			User current = MainController.getCurrentUser();
 			if(current.getPrivilege() == User.SUPER_ADMIN || 
 					(current.getPrivilege() == User.ADMIN && 
-					 current.getShop().equals(user.getShop()) && 
-					 current.getShop().equals(shop) && 
-					 user.getPrivilege() < User.ADMIN && 
-					 privilege <= User.ADMIN)) {
+					current.getShop().equals(user.getShop()) && 
+					current.getShop().equals(shop) && 
+					user.getPrivilege() < User.ADMIN && 
+					privilege <= User.ADMIN)) {
 
 				int index = users.indexOf(user);
 				users.get(index).setFirstName(firstName);
 				users.get(index).setLastName(lastName);
 				users.get(index).setShop(shop);
-//				users.get(index).setMail(mail);							// est ce qu'on dit qu'on peut changer le mail 
-//				users.get(index).setHashedPwd(new String(password));	// et le mdp ?
 				users.get(index).setPrivilege(privilege);
-				
+
 			}
 			else {
 				throw new PermissionException("Vous n'avez pas les permissions requises pour exécuter cette action");
@@ -228,16 +244,13 @@ public class UserDAO {
 		return password.length > 0;
 	}
 
-	///// TMP /////
-	private static void populateUserList(ArrayList<User> users) {
-		try {
-			addUser("Tom", 		"Suchel", 		ShopDAO.getShopByName("Lidl"), 		"tom.suchel@gmail.com", 	(new String("tom")).toCharArray(), 		User.SUPER_ADMIN);
-			addUser("Olivier", 	"Millochau", 	ShopDAO.getShopByName("Carrouf"), 	"o.millochau@gmail.com", 	(new String("crevette")).toCharArray(), User.SELLER);
-			addUser("Sam", 		"Souville", 	ShopDAO.getShopByName("Monop"), 	"samsam@gmail.com", 		(new String("sam")).toCharArray(), 		User.RESTRICTED_SELLER);
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+	/**
+	 * Check if the privilege of an user is valid
+	 * @param privilege the privilege to check
+	 * @return true if valid, else false
+	 */
+	public static boolean isPrivilegeValid(int privilege) {
+		return privilege > 0 && privilege < 5;
 	}
-
 
 }

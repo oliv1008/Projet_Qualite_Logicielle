@@ -19,10 +19,15 @@ import model.Shop;
 import model.User;
 import view.misc.AbstractAddUserPanel;
 
+/**
+ * Panel used to modify an existing user.
+ */
 public class ModifyUserPanel extends AbstractAddUserPanel {
 
+	/*===== ATTRIBUTES =====*/
 	private User user;
 	
+	/*===== BUILDER =====*/
 	public ModifyUserPanel(User user) {
 		super();
 		this.user = user;

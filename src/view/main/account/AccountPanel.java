@@ -15,8 +15,12 @@ import javax.swing.SwingConstants;
 import controller.MainController;
 import controller.UserDAO;
 
+/**
+ * Class that represents the panel for account management
+ */
 public class AccountPanel extends JPanel {
 
+	/*===== BUILDER =====*/
 	public AccountPanel() {
 		
 		setLayout(new GridLayout(12, 0));
@@ -47,6 +51,11 @@ public class AccountPanel extends JPanel {
 		mailPanel.add(new JLabel("Mail :"));
 		mailPanel.add(new JLabel(MainController.getCurrentUser().getMail()));
 		add(mailPanel);
+		
+		JPanel privilegePanel = new JPanel();
+		privilegePanel.add(new JLabel("Privilège :"));
+		privilegePanel.add(new JLabel(String.valueOf(MainController.getCurrentUser().getPrivilege())));
+		add(privilegePanel);
 		
 		JPanel buttonsPanel = new JPanel();
 		JButton deleteAccountButton = new JButton("Supprimer le compte");

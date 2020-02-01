@@ -11,13 +11,11 @@ public class MainController {
 	private static User currentUser = null;
 
 	public static void main(String[] args) {
-		ItemDAO.loadItemFile();
-		ShopDAO.loadShopFile();	
-		UserDAO.loadUserFile();
+		ItemDAO.loadItemFile(false);	//
+		ShopDAO.loadShopFile(false);	// false = don't reset the database
+		UserDAO.loadUserFile(false);	//
 
-//		LoginController loginController = new LoginController();
-	
-		openMainView(UserDAO.getUserByMail("admin"));
+		new LoginController();
 	}
 
 	/*===== BUILDER =====*/

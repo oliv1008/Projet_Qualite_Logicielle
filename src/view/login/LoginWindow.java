@@ -11,13 +11,18 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
-public class LoginWindow extends JFrame implements ActionListener {
+/**
+ * Window for the authentification system
+ */
+public class LoginWindow extends JFrame {
 	
-	JPanel center;
+	/*===== ATTRIBUTES =====*/
+	private JPanel center;
 	
-	JButton signInButton;
-	JButton signUpButton;
+	private JButton signInButton;
+	private JButton signUpButton;
 	
+	/*===== BUILDER =====*/
 	public LoginWindow() {
 
 		setTitle("Authentification");
@@ -32,12 +37,22 @@ public class LoginWindow extends JFrame implements ActionListener {
 
 		signInButton = new JButton("Se connecter");
 		signInButton.setPreferredSize(new Dimension(240, 30));
-		signInButton.addActionListener(this);
+		signInButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				displaySigninPanel();
+			}
+		});
 		signInButton.setBackground(new Color(174, 174, 174)); 
 
 		signUpButton = new JButton("S'inscrire");
 		signUpButton.setPreferredSize(new Dimension(240, 30));
-		signUpButton.addActionListener(this);
+		signUpButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				displaySignupPanel();
+			}
+		});
 
 		north.add(signInButton);
 		north.add(signUpButton);
@@ -53,13 +68,7 @@ public class LoginWindow extends JFrame implements ActionListener {
 		setVisible(true);
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		switch(e.getActionCommand()) {
-		case "Se connecter"	:	displaySigninPanel(); break;
-		case "S'inscrire"	: 	displaySignupPanel(); break;
-		}
-	}
+	/*===== METHODS =====*/
 	
 	public void displaySigninPanel() {
 		center.removeAll(); 

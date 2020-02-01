@@ -17,12 +17,17 @@ import javax.swing.WindowConstants;
 import controller.ItemDAO;
 import controller.MainController;
 
+/**
+ * Window used to create a new item.
+ */
 public class AddItemPanel extends JFrame {
 	
+	/*===== ATTRIBUTES =====*/
 	private JTextField tfName;
 	private JTextField tfDescription;
 	private JTextField tfPrice;
 
+	/*===== BUILDER =====*/
 	public AddItemPanel(JTable table) {
 		
 		setTitle("Ajouter un produit");
@@ -39,36 +44,18 @@ public class AddItemPanel extends JFrame {
 
 		tfName = new JTextField();
 		tfName.setPreferredSize(new Dimension(260, 30));
-		tfName.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-			}
-		});
 		add(tfName);
 
 		add(new JLabel("Description"));
 
 		tfDescription = new JTextField();
 		tfDescription.setPreferredSize(new Dimension(260, 90));
-		tfDescription.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-			}
-		});
 		add(tfDescription);
 		
 		add(new JLabel("Prix"));
 
 		tfPrice = new JTextField();
 		tfPrice.setPreferredSize(new Dimension(260, 30));
-		tfPrice.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-			}
-		});
 		add(tfPrice);
 		
 		JButton addItemButton = new JButton("Ajouter un produit");
@@ -91,6 +78,7 @@ public class AddItemPanel extends JFrame {
 		setVisible(true);
 	}
 	
+	/*===== METHODS =====*/
 	public void exitWindow() {
 		this.dispose();
 	}

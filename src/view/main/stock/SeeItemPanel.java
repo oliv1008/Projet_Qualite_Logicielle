@@ -11,12 +11,17 @@ import javax.swing.WindowConstants;
 
 import model.Item;
 
+/**
+ * Window used to see the properties of an item.
+ */
 public class SeeItemPanel extends JFrame {
 
+	/*===== ATTRIBUTES =====*/
 	private JTextField tfName;
 	private JTextField tfDescription;
 	private JTextField tfPrice;
 
+	/*===== BUILDER =====*/
 	public SeeItemPanel(JTable table, Item item) {
 		
 		setTitle(item.getName());
@@ -53,6 +58,7 @@ public class SeeItemPanel extends JFrame {
 		setVisible(true);
 	}
 	
+	/*===== METHODS =====*/
 	public void exitWindow() {
 		this.dispose();
 	}

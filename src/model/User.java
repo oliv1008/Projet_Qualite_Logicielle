@@ -4,6 +4,9 @@ import java.io.Serializable;
 
 import misc.BCrypt;
 
+/**
+ * Model for the users
+ */
 public class User implements Serializable {
 
 	/*===== CONSTANTS =====*/
@@ -27,7 +30,7 @@ public class User implements Serializable {
 		this.lastName = lastName;
 		this.shop = shop;
 		this.mail = mail;
-		this.hashedPwd = BCrypt.hashpw(new String(password), BCrypt.gensalt(5));
+		setHashedPwd(password);
 		this.privilege = privilege;
 	}
 
@@ -73,7 +76,7 @@ public class User implements Serializable {
 	}
 
 	public void setHashedPwd(String password) {
-		this.hashedPwd = BCrypt.hashpw(new String(password), BCrypt.gensalt(5));
+		this.hashedPwd = BCrypt.hashpw(password, BCrypt.gensalt(5));
 	}
 
 	public void setPrivilege(int privilege) {
@@ -83,7 +86,7 @@ public class User implements Serializable {
 	/*===== METHODS =====*/
 	@Override
 	public String toString() {
-		return firstName + " " + lastName + " | " + hashCode();
+		return firstName + " " + lastName;
 	}
 	
 	@Override
@@ -92,10 +95,8 @@ public class User implements Serializable {
 	    if (!(obj instanceof User)) return false;
 	    if (obj == this) 			return true;
 	    return this.hashCode() == ((User) obj).hashCode();
-
 	}
 	
-	// Trouver une meilleure façon de faire ça (genre un ID ?)
 	@Override
 	public int hashCode() {
 	    return firstName.length() * lastName.length() + shop.hashCode() * mail.length();

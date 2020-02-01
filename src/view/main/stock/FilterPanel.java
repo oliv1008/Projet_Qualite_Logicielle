@@ -25,6 +25,9 @@ import controller.MainController;
 import view.misc.ItemComboBox;
 import view.misc.ShopComboBox;
 
+/**
+ * Panel used to filters the content of the JTable
+ */
 public class FilterPanel extends JPanel {
 
 	/*===== ATTRIBUTES =====*/
@@ -45,7 +48,6 @@ public class FilterPanel extends JPanel {
 		// Filter panel
 		setLayout(new FlowLayout(FlowLayout.CENTER, 0, 10));
 		setPreferredSize(new Dimension(300, 0));
-		//		setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
 		JLabel filterPanelLabel = new JLabel("Filtrage des stocks", SwingConstants.CENTER);
 		filterPanelLabel.setFont(new java.awt.Font("serif", Font.PLAIN, 20));

@@ -18,8 +18,12 @@ import controller.UserDAO;
 import model.User;
 import view.misc.UserComboBox;
 
+/**
+ * Panel used for user management. Only usable by SUPER_ADMIN and ADMIN.
+ */
 public class UserPanel extends JPanel {
 
+	/*===== ATTRIBUTES =====*/
 	private UserComboBox userComboBox;
 
 	private JLabel lFirstName;
@@ -31,6 +35,7 @@ public class UserPanel extends JPanel {
 	private JButton modifyUserButton;
 	private JButton removeUserButton;
 
+	/*===== BUILDER =====*/
 	public UserPanel() {
 
 		JPanel contentPanel = new JPanel();
@@ -123,6 +128,7 @@ public class UserPanel extends JPanel {
 		add(contentPanel);
 	}
 
+	/*===== METHODS =====*/
 	public void refresh() {
 		userComboBox.reload();
 	}

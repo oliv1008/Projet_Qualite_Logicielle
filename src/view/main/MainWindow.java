@@ -21,6 +21,9 @@ import view.main.account.AccountPanel;
 import view.main.stock.StockPanel;
 import view.main.users.UserPanel;
 
+/**
+ * Main window
+ */
 public class MainWindow extends JFrame {
 
 	/*===== ATTRIBUTES =====*/
@@ -57,8 +60,8 @@ public class MainWindow extends JFrame {
 
 		setVisible(true);
 	}
-	/*=====*********=====*/
 
+	/*===== METHODS =====*/
 	public void setUpButtons() {		
 
 		JPanel buttonPane = new JPanel();

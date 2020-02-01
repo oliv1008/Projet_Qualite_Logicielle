@@ -7,8 +7,12 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
+/**
+ * Window used to create a new user.
+ */
 public class AddUserWindow extends JFrame {
 
+	/*===== BUILDER =====*/
 	public AddUserWindow() {
 
 		setTitle("Ajouter un utilisateur");

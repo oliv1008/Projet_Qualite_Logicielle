@@ -9,8 +9,12 @@ import javax.swing.WindowConstants;
 
 import model.User;
 
+/**
+ * Window used to modify an existing user.
+ */
 public class ModifyUserWindow extends JFrame {
 	
+	/*===== BUILDER =====*/
 	public ModifyUserWindow(User user) {
 
 		setTitle("Modifier un utilisateur");

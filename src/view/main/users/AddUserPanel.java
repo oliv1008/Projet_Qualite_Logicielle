@@ -18,8 +18,12 @@ import model.Shop;
 import model.User;
 import view.misc.AbstractAddUserPanel;
 
+/**
+ * Panel used to create a new user.
+ */
 public class AddUserPanel extends AbstractAddUserPanel {
 
+	/*===== BUILDER =====*/
 	public AddUserPanel() {
 		super();
 	}

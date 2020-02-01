@@ -8,38 +8,32 @@ import javax.swing.table.AbstractTableModel;
 
 import controller.ShopDAO;
 
-/**
- * This class is used ad the model for the JTable of checks.
- * It contains all the methods needed to manage a table of checks.
- */
-public class ItemList extends AbstractTableModel implements Serializable {
+public class ItemTableModel extends AbstractTableModel implements Serializable {
 
 	private static final long serialVersionUID = -1625262976180949154L;
 
 	/*===== ATTRIBUTES =====*/	
-	private ArrayList<StockLine> stocks;
+	private ArrayList<LineData> stocks;
 	private final String[] columns = {"Magasin", "Produit", "Quantité"};
 
 	private ArrayList<Shop> shops;
 
 	/*===== BUILDER =====*/	
 
-	/**
-	 * Default builder. 
-	 * @param checks the ArrayList of checks contained in the company
-	 */
-	public ItemList() {
+	public ItemTableModel() {
 		rebuildModel();
 	}
 	
 	public void rebuildModel() {
-		stocks = new ArrayList<StockLine>();
+		stocks = new ArrayList<LineData>();
 
+		// We recover the list of shops
 		shops = ShopDAO.getAllShops();
 
+		// For each shops, we add a new line for each item it has in its stocks
 		for(Shop s : shops) {
 			for(Entry<Item, Integer> entry : s.getStock().entrySet()) {
-				stocks.add(new StockLine(s, entry.getKey()));
+				stocks.add(new LineData(s, entry.getKey()));
 			}
 		}
 		
@@ -48,38 +42,21 @@ public class ItemList extends AbstractTableModel implements Serializable {
 
 	/*===== GETTERS AND SETTERS =====*/	
 
-	/**
-	 * Add a check to the model and update the tableModel
-	 * @param check the department to add
-	 */
-	public void addStockLine(StockLine line) {
+	public void addStockLine(LineData line) {
 		stocks.add(line);
 		fireTableRowsInserted(stocks.size()-1, stocks.size()-1);
 	}
 
-	/**
-	 * Remove a check from the model and update the tableModel
-	 * @param rowIndex the row index of the check to remove
-	 */
 	public void removeStockLine(int rowIndex) {
 		stocks.remove(rowIndex);
 		fireTableRowsDeleted(rowIndex, rowIndex);
 	}
 
-	/**
-	 * Can be used to get a check depending of his place in the table
-	 * @param rowIndex the row index of the check
-	 * @return the check at that row index
-	 */
-	public StockLine getStockLine(int rowIndex) {
+	public LineData getStockLine(int rowIndex) {
 		return stocks.get(rowIndex);
 	}
 
-	/**
-	 * Getter for the check list
-	 * @return the current list of checks
-	 */
-	public ArrayList<StockLine> getStocks(){
+	public ArrayList<LineData> getStocks(){
 		return stocks;
 	}
 
@@ -117,7 +94,7 @@ public class ItemList extends AbstractTableModel implements Serializable {
 	@Override
 	public void setValueAt(Object value, int rowIndex, int columnIndex) {
 		if(value != null) {
-			StockLine stock = stocks.get(rowIndex);
+			LineData stock = stocks.get(rowIndex);
 			switch(columnIndex) {
 			case 2 : stock.setQuantity((Integer)value); break;
 			default: break;
@@ -126,6 +103,7 @@ public class ItemList extends AbstractTableModel implements Serializable {
 		}
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Class getColumnClass(int columnIndex) {
 		switch(columnIndex) {

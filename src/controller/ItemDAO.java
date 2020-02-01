@@ -18,16 +18,21 @@ public class ItemDAO {
 
 	/**
 	 * Load the list of items from the filesystem
+	 * @param reset if true, create a new database
 	 */
 	@SuppressWarnings("unchecked")
-	public static void loadItemFile() {
-		try {
-			items = (ArrayList<Item>)Serialize.load(itemsFilePath);
-		} catch (FileNotFoundException e) {
+	public static void loadItemFile(boolean reset) {
+		if(reset) {
 			items = new ArrayList<Item>();
-			populateItemList(items);
-			System.out.println("[ItemDAO] Model file not found, creation of a new file");
-		}	
+		}
+		else {
+			try {
+				items = (ArrayList<Item>)Serialize.load(itemsFilePath);
+			} catch (FileNotFoundException e) {
+				items = new ArrayList<Item>();
+				System.out.println("[ItemDAO] Model file not found, creation of a new file");
+			}
+		}		
 	}
 
 	/**
@@ -58,16 +63,18 @@ public class ItemDAO {
 		if(MainController.getCurrentUser().getPrivilege() == User.SUPER_ADMIN) {
 			// Coherence
 			if(isNameValid(name) && isDescriptionValid(description) && isPriceValid(price)) {
-				
+
 				Item item = new Item(name, description, price);
 
+				// We add the item to the item list
 				items.add(item);
 
+				// And then we add it to each shop
 				ArrayList<Shop> shops = ShopDAO.getAllShops();
 				for(Shop s : shops) {
 					s.getStock().put(item, 0);
 				}
-				
+
 			}
 			else {
 				throw new CoherenceException("Données non valides");
@@ -89,8 +96,11 @@ public class ItemDAO {
 		if(MainController.getCurrentUser().getPrivilege() == User.SUPER_ADMIN) {
 			// Coherence
 			if(item != null) {
+
+				// We delete the item from the item list
 				items.remove(item);
 
+				// And then we delete it from each shop
 				ArrayList<Shop> shops = ShopDAO.getAllShops();
 				for(Shop s : shops) {
 					s.getStock().remove(item);
@@ -120,18 +130,21 @@ public class ItemDAO {
 			// Coherence
 			if(item != null && isNameValid(newName) && isDescriptionValid(newDescription) && isPriceValid(newPrice)) {
 				
+				// We modify the item in each shop
+				ArrayList<Shop> shops = ShopDAO.getAllShops();
+				for(Shop s : shops) {
+					Integer quantity = s.getQuantity(item);
+					System.out.println("Shop="+s+", Quantity="+quantity);
+					s.getStock().remove(item);
+					s.getStock().put(new Item(newName, newDescription, newPrice), quantity);
+				}
+				
+				// And then the modify it in the item list
 				int index = items.indexOf(item);
 				items.get(index).setName(newName);
 				items.get(index).setDescription(newDescription);
 				items.get(index).setPrice(newPrice);
 
-				ArrayList<Shop> shops = ShopDAO.getAllShops();
-				for(Shop s : shops) {
-					Integer quantity = s.getStock().get(item);		// est ce que c'est bien de faire ça ?
-					s.getStock().remove(item);
-					s.getStock().put(new Item(newName, newDescription, newPrice), quantity);
-				}
-				
 			}
 			else {
 				throw new CoherenceException("Données non valides");
@@ -192,9 +205,9 @@ public class ItemDAO {
 				&& MainController.getCurrentUser().getShop().equals(shop))) {
 			// Coherence : (quantity >= 0)
 			if(shop != null && item != null && quantity >= 0) {
-				
+
 				shop.setQuantity(item, quantity);
-				
+
 			}
 			else {
 				throw new CoherenceException("Données non valides");
@@ -235,11 +248,4 @@ public class ItemDAO {
 		return price > 0 && (s.substring(s.indexOf('.')+1)).length() <= 2;
 	}
 
-	//// TMP ////
-	private static void populateItemList(ArrayList<Item> items) {
-		items.add(new Item("Pomme", "c'est bon", 2.5));
-		items.add(new Item("Fraise", "c'est rouge", 4));
-		items.add(new Item("Banane", "c'est long", 1.3));
-		items.add(new Item("Tractopelle", "c'est cool", 126));
-	}
 }

@@ -24,15 +24,18 @@ import javax.swing.event.ListSelectionListener;
 import controller.ItemDAO;
 import controller.MainController;
 import model.Item;
-import model.ItemList;
+import model.ItemTableModel;
 import model.Shop;
 import model.User;
 import view.misc.ShopComboBox;
 
+/**
+ * Panel used to display the stocks of each shop
+ */
 public class StockPanel extends JPanel {
 
 	/*===== ATTRIBUTES =====*/
-	private ItemList itemList;
+	private ItemTableModel itemList;
 	private JTable table;
 
 	private AdminPanel adminPanel = null;				/** Admin Panel for item management **/
@@ -50,7 +53,7 @@ public class StockPanel extends JPanel {
 		setLayout(new BorderLayout());
 
 		// Adds stock panel
-		itemList = new ItemList();
+		itemList = new ItemTableModel();
 		table = new JTable(itemList);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		add(new JScrollPane(table), BorderLayout.CENTER);
@@ -74,10 +77,6 @@ public class StockPanel extends JPanel {
 
 	/*===== BUILDER METHODS =====*/
 
-	/**
-	 * Sets up the action listener to the table.
-	 * This is used to disable some buttons (delete) when the user should click on them.
-	 */
 	private void setUpActionListener() {
 		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			@Override
@@ -94,7 +93,8 @@ public class StockPanel extends JPanel {
 				else {
 					int privilege = MainController.getCurrentUser().getPrivilege();
 					Shop userShop = MainController.getCurrentUser().getShop();
-					Shop selectedShop = (Shop)itemList.getValueAt(table.getSelectedRow(), 0);
+					Shop selectedShop = (Shop)itemList.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 0);
+					Integer selectedQuantity = (Integer)itemList.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 2);
 
 					if(privilege <= User.RESTRICTED_SELLER || (privilege == User.SELLER && !userShop.equals(selectedShop))) {
 						quantitySpinner.setEnabled(false);
@@ -105,7 +105,7 @@ public class StockPanel extends JPanel {
 					// Else
 					else {
 						quantitySpinner.setEnabled(true);
-						quantitySpinnerModel.setValue(itemList.getValueAt(table.getSelectedRow(), 2));
+						quantitySpinnerModel.setValue(selectedQuantity);
 						transferSpinner.setEnabled(true);
 						transferSpinnerModel.setValue(0);
 						shopComboBox.setEnabled(true);
@@ -116,9 +116,6 @@ public class StockPanel extends JPanel {
 		});
 	}
 
-	/**
-	 * Sets up all the buttons of the panel (addCheck, removeCheck, synchronize, save...)
-	 */
 	private void setUpButtons() {
 		JPanel buttons = new JPanel();
 		buttons.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 5));
@@ -134,11 +131,11 @@ public class StockPanel extends JPanel {
 			public void stateChanged(ChangeEvent ce) {
 				if(!table.getSelectionModel().isSelectionEmpty()) {
 					try {
-						Item item = 		(Item)itemList.getValueAt(table.getSelectedRow(), 1);
+						Item item = 		(Item)itemList.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 1);
 						Integer quantity = 	(int)quantitySpinnerModel.getValue();
-						Shop shop = 		(Shop)itemList.getValueAt(table.getSelectedRow(), 0);
+						Shop shop = 		(Shop)itemList.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 0);
 						ItemDAO.changeStock(shop, item, quantity);
-						itemList.setValueAt(quantity, table.getSelectedRow(), 1);
+						itemList.setValueAt(quantity, table.convertRowIndexToModel(table.getSelectedRow()), 1);
 					}
 					catch(Exception e) {
 						JOptionPane.showMessageDialog(new JFrame(), e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
@@ -167,15 +164,14 @@ public class StockPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
 				try {
-					Item item = 		(Item)itemList.getValueAt(table.getSelectedRow(), 1);
+					Item item = 		(Item)itemList.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 1);
 					Integer quantity = 	(int)transferSpinnerModel.getValue();
-					Shop from = 		(Shop)itemList.getValueAt(table.getSelectedRow(), 0);
+					Shop from = 		(Shop)itemList.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 0);
 					Shop to = 			(Shop)shopComboBox.getSelectedItem();
 					ItemDAO.transferItem(item, quantity, from, to);
 					MainController.refreshDisplay();
 				}
 				catch(Exception e) {
-					e.printStackTrace();
 					JOptionPane.showMessageDialog(new JFrame(), e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
 				}
 			}
@@ -190,7 +186,7 @@ public class StockPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(!table.getSelectionModel().isSelectionEmpty()) {
-					new SeeItemPanel(table, (Item)itemList.getValueAt(table.getSelectedRow(), 1));
+					new SeeItemPanel(table, (Item)itemList.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 1));
 				}
 			}
 		});

@@ -13,11 +13,17 @@ import controller.LoginController;
 import model.Shop;
 import view.misc.AbstractAddUserPanel;
 
+/**
+ * Panel for the account creation
+ */
 public class SignupPanel extends AbstractAddUserPanel {
-		
+	
+	/*===== BUILDER =====*/
 	public SignupPanel() {
 		super();
 	}
+	
+	/*===== METHODS =====*/
 	
 	@Override
 	protected void addFinalButton() {

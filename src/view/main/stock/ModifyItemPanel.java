@@ -18,12 +18,17 @@ import controller.ItemDAO;
 import controller.MainController;
 import model.Item;
 
+/**
+ * Window used to change the properties of an item.
+ */
 public class ModifyItemPanel extends JFrame {
 	
+	/*===== ATTRIBUTES =====*/
 	private JTextField tfName;
 	private JTextField tfDescription;
 	private JTextField tfPrice;
 
+	/*===== BUILDER =====*/
 	public ModifyItemPanel(JTable table, Item item) {
 		
 		setTitle("Modifier un produit");
@@ -40,36 +45,18 @@ public class ModifyItemPanel extends JFrame {
 
 		tfName = new JTextField(item.getName());
 		tfName.setPreferredSize(new Dimension(260, 30));
-		tfName.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-			}
-		});
 		add(tfName);
 
 		add(new JLabel("Description"));
 
 		tfDescription = new JTextField(item.getDescription());
 		tfDescription.setPreferredSize(new Dimension(260, 90));
-		tfDescription.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-			}
-		});
 		add(tfDescription);
 		
 		add(new JLabel("Prix"));
 
 		tfPrice = new JTextField(String.valueOf(item.getPrice()));
 		tfPrice.setPreferredSize(new Dimension(260, 30));
-		tfPrice.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-			}
-		});
 		add(tfPrice);
 		
 		JButton addItemButton = new JButton("Modifier ce produit");

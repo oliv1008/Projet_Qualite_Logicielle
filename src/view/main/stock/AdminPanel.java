@@ -19,14 +19,18 @@ import controller.MainController;
 import model.Item;
 import view.misc.ItemComboBox;
 
+/**
+ * Panel only accesible by the SUPER_ADMIN role, used to create, modify or delete items.
+ */
 public class AdminPanel extends JPanel {
 
+	/*===== ATTRIBUTES =====*/
 	private ItemComboBox itemComboBox;
 
+	/*===== BUILDER =====*/
 	public AdminPanel(JTable table) {
 		setLayout(new FlowLayout(FlowLayout.CENTER, 0, 10));
 		setPreferredSize(new Dimension(300, 0));
-		//		setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
 		JLabel adminPanelLabel = new JLabel("Gestion des produits", SwingConstants.CENTER);
 		adminPanelLabel.setFont(new java.awt.Font("serif", Font.PLAIN, 20));
@@ -77,6 +81,7 @@ public class AdminPanel extends JPanel {
 		add(modifyItemButton);
 	}
 
+	/*===== METHODS =====*/
 	public void refresh() {
 		itemComboBox.reload();
 	}

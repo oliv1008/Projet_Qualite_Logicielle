@@ -1,0 +1,80 @@
+===== ItemDAO =====
+
+- loadItemFile()	vérifier si "items" a bien été initialisé
+			- soit il charge la bdd si chemin correct
+			- soit il créé un tableau vide sinon
+
+- saveItemFile()	vérifier que ça a bien sauvegardé (comment ?)
+
+- getAllItems()
+
+- addItem()		- vérifier permissions + coherence
+- deleteItem()		- vérifier permissions + coherence
+- modifyItem()		- vérifier permissions + coherence
+- transferItem()	- vérifier permissions + coherence
+- changeStock()		- vérifier permissions + coherence
+
+- isNameValid()
+- isDescriptionValid()
+- isPriceValid()
+
+===== UserDAO =====
+
+- loadUserFile()
+- saveUserFile()
+- getAllUsers()
+
+- addUser()
+- deleteUser()
+- deleteOwnAccount()
+- modifyUser()
+
+- getUserByMail()
+
+- isNameValid()
+- isShopValid()
+- isMailValid()
+- isPasswordValid()
+- isPrivilegeValid()
+
+===== ShopDAO =====
+
+- loadShopFile()
+- saveShopFile()
+- getAllShops()
+
+- getShopByName()
+
+===== MainController =====
+
+- openMainView() 	chiant à tester
+- onExit()		pareil
+
+===== LoginController =====
+
+- login()
+- isPasswordCorrect()
+- signup()
+
+===== Item =====
+
+- equals()
+- hashCode()
+
+===== Shop =====
+
+- equals()
+- hashCode()
+
+===== User =====
+
+- equals()
+- hashCode()
+
+
+
+
+
+
+
+
