@@ -101,5 +101,4 @@ public class User implements Serializable {
 	public int hashCode() {
 	    return firstName.length() * lastName.length() + shop.hashCode() * mail.length();
 	}
-		
 }
